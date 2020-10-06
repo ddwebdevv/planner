@@ -62,20 +62,25 @@ function createItemEl(columnEl, column, item, index) {
   listEl.classList.add('drag-item');
   listEl.textContent = item;
   listEl.draggable = true;
-  // listEl.setAttribute('ondragstart', 'drag(event)');
-  listEl.addEventListener('dragstart', drag);
-  // listEl.addEventListener('doubleclick', () => e.contentEditable = true);
   listEl.contentEditable = true;
-   //change it to addEL double click
-
-  listEl.id = index;
+  listEl.addEventListener('dragstart', drag);
+  listEl.addEventListener('keyup', inputExit);
+  listEl.dataset.id = index;
+  listEl.dataset.col = column;
   // add class instead id!!!
   listEl.addEventListener('focusout', () => updateItem(index, column));
   columnEl.appendChild(listEl);
 }
 
-function editItem(e) {
-  e.contentEditable = true;
+function inputExit(e) {
+  // if (e.inputType === 'insertParagraph') { 
+  if (e.keyCode === 13) {    
+    console.log(e.target.dataset.id, e.target.dataset.col);
+    console.log(e);
+    console.log(13);
+    updateItem(e.target.dataset.id, e.target.dataset.col);
+    // updateItem(e.id, e.column);
+  }
 }
 
 // Update Columns in DOM - Reset HTML, Filter Array, Update localStorage
