@@ -10,9 +10,6 @@ const workingList = document.getElementById('working-list');
 const completeList = document.getElementById('complete-list');
 const onHoldList = document.getElementById('on-hold-list');
 
-// Items
-let updatedOnLoad = false;
-
 // Initialize Arrays
 let ideasListArray = [];
 let workingListArray = [];
@@ -56,7 +53,7 @@ function filterArray(array) {
 }
 
 // Create DOM Elements for each list item
-function createItemEl(columnEl, column, item, index) {
+function createItemEl(parentEl, column, item, index) {
   // List Item
   const listEl = document.createElement('li');
   listEl.classList.add('drag-item');
@@ -64,32 +61,34 @@ function createItemEl(columnEl, column, item, index) {
   listEl.draggable = true;
   listEl.contentEditable = true;
   listEl.addEventListener('dragstart', drag);
-  listEl.addEventListener('keyup', inputExit);
+  listEl.addEventListener('keydown', inputExit);
   listEl.dataset.id = index;
   listEl.dataset.col = column;
   // add class instead id!!!
   listEl.addEventListener('focusout', () => updateItem(index, column));
-  columnEl.appendChild(listEl);
+  parentEl.appendChild(listEl);
 }
 
 function inputExit(e) {
-  // if (e.inputType === 'insertParagraph') { 
+  const eId = e.target.dataset.id;
+  const eCol = e.target.dataset.col;
+  const selectedArray = listArrays[eCol];
   if (e.keyCode === 13) {    
     console.log(e.target.dataset.id, e.target.dataset.col);
-    console.log(e);
-    console.log(13);
     updateItem(e.target.dataset.id, e.target.dataset.col);
-    // updateItem(e.id, e.column);
+    return;
+  }
+  if (e.keyCode === 46) {
+    console.log(selectedArray[eId]);
+    e.target.textContent = '';
+    delete selectedArray[eId];
+    console.log(listArrays[eCol][eId]);
+    updateDOM();
   }
 }
 
 // Update Columns in DOM - Reset HTML, Filter Array, Update localStorage
 function updateDOM() {
-  // Check localStorage once
-  if (!updatedOnLoad) {
-    getSavedColumns();
-  }
-  // ideas Column
   ideasList.textContent = '';
   ideasListArray.forEach((ideasItem, index) => {
     createItemEl(ideasList, 0, ideasItem, index);
@@ -114,7 +113,6 @@ function updateDOM() {
   });
   onHoldListArray = filterArray(onHoldListArray);
   // Run getSavedColumns only once, Update Local Storage
-  updatedOnLoad = true;
   updateSavedColumns();
 }
 
@@ -124,7 +122,9 @@ function updateItem(id, column) {
   const selectedColumnEl = listColumns[column].children;
   if (!dragging) {
     if (!selectedColumnEl[id].textContent) {
+      console.log(selectedArray[id]);
       delete selectedArray[id];
+      console.log(listArrays[column]);
     } else {
       selectedArray[id] = selectedColumnEl[id].textContent;
     }
@@ -147,6 +147,8 @@ function showInputBox(column) {
   addBtns[column].style.visibility = 'hidden';
   saveItemBtns[column].style.display = 'flex';
   addItemContainers[column].style.display = 'flex';
+  addItemContainers[column].firstElementChild.focus();
+  console.log(addItemContainers);
 }
 
 // hide add item box
@@ -198,6 +200,14 @@ function dragEnter(column) {
   currentColumn = column;
 }
 
+// function hideInputOnEnter(e) {
+//   console.log(e.target.parentNode, e);
+//   if (e.keyCode === 13) {
+//     console.log(e.target);
+//     hideInputBox(index);    
+//   } 
+// }
+
 listColumns.forEach((item, index) => {
   item.addEventListener('dragover', allowDrop);
   item.addEventListener('drop', drop);
@@ -206,7 +216,10 @@ listColumns.forEach((item, index) => {
 addItems.forEach(item => item.contentEditable = true);
 addBtns.forEach((item, index) => item.addEventListener('click', () => showInputBox(index)));
 saveItemBtns.forEach((item, index) => item.addEventListener('click', () => hideInputBox(index)));
-
+addItemContainers.forEach((item, index) => {
+  item.firstElementChild.addEventListener('focusout', () => hideInputBox(index));
+  // item.firstElementChild.addEventListener('keydown', hideInputOnEnter);
+});
 getSavedColumns();
 updateSavedColumns();
 updateDOM();

@@ -22,6 +22,13 @@ body {
   overflow-y: hidden;
 }
 
+p {
+  font-style: italic;
+  font-size: 0.9rem;
+  text-align: center;
+  color: bisque;
+}
+
 h1, h2 {
   letter-spacing: 2px;
   text-shadow: 2px 2px 5px black;
@@ -31,6 +38,7 @@ h1, h2 {
 .main-title {
   text-align: center;
   color: bisque;
+  /* margin-bottom: 2rem; */
 }
 
 ul {
@@ -89,7 +97,7 @@ ul {
 /* Custom Scrollbar */
 .custom-scroll {
   overflow-y: auto;
-  max-height: 60vh;
+  max-height: 50vh;
 }
 
 .custom-scroll::-webkit-scrollbar-track {
@@ -195,14 +203,11 @@ ul {
   padding: 5px 10px;
   border-radius: 20px;
   background-color: rgba(255, 255, 255, 0.9);
-  min-height: 100px;
   display: none;
 }
 
 .add-item {
   width: 100%;
-  /* min-height: 100px; */
-  /* height: auto; */
   background-color: white;
   border-radius: 25px;
   margin: 5px auto;
