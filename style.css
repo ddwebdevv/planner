@@ -27,7 +27,24 @@ p {
   font-size: 0.9rem;
   text-align: center;
   color: bisque;
+  margin: 0;
 }
+
+a {
+  display: flex;
+  justify-content: center;
+}
+a:link,
+a:active,
+a:visited {
+  color:  rgb(216, 152, 75);
+  background-color: transparent;
+  text-decoration: underline;  
+}
+a:hover {
+  color:  rgb(187, 119, 36);
+}
+
 
 h1, h2 {
   letter-spacing: 2px;
@@ -38,7 +55,7 @@ h1, h2 {
 .main-title {
   text-align: center;
   color: bisque;
-  /* margin-bottom: 2rem; */
+  margin: 0;
 }
 
 ul {
@@ -47,9 +64,6 @@ ul {
   padding: 0;
 }
 
-.drag-container {
-  margin: 20px;
-}
 
 .drag-list {
   display: flex;
